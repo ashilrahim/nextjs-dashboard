@@ -1,14 +1,53 @@
-import '@/app/ui/global.css'
-import { inter } from '@/app/ui/fonts';
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+import Navbar from "../components/Navbar";
+import { ThemeProvider } from "@/components/provider/theme-provider";
+import { AppSidebar } from "../components/AppSidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Dashboard App",
+  description: "A dashboard application built with Next.js and shadcn UI.",
+};
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
-    </html>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SidebarProvider>
+        <AppSidebar />
+        <main className="w-full">
+          <Navbar />
+          
+          <div className="px-4">{children}</div>
+        </main>
+        </SidebarProvider>
+      </ThemeProvider>
+    </body>
+    </html >
   );
 }
